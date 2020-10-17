@@ -8,13 +8,30 @@
 
 import UIKit
 
-class TweetViewController: UIViewController {
+class TweetViewController: UIViewController, UITextViewDelegate {
     
     @IBOutlet weak var tweetTextView: UITextView!
+    @IBOutlet weak var profileImageView: UIImageView!
+    @IBOutlet weak var remainingCharsLabel: UILabel!
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        // Set the max character limit
+        let characterLimit = 140
+
+        // Construct what the new text would be if we allowed the user's latest edit
+        let newText = NSString(string: textView.text!).replacingCharacters(in: range, with: text)
+
+        // TODO: Update Character Count Label
+        remainingCharsLabel.text = String(characterLimit - newText.count)
+        // The new text should be allowed? True/False
+        return newText.count < characterLimit
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tweetTextView.becomeFirstResponder()
+        tweetTextView.delegate = self
         // Do any additional setup after loading the view.
     }
     
@@ -24,7 +41,7 @@ class TweetViewController: UIViewController {
     
     @IBAction func tweet(_ sender: Any) {
         if(!tweetTextView.text.isEmpty){
-            TwitterAPICaller.client?.postTweet(tweetString: tweetTextView.text, success: {
+            TwitterAPICaller.client?.postTweet(tweetString: (tweetTextView.text)!, success: {
                 self.dismiss(animated: true, completion: nil)
             }, failure: { (error) in
                 print("Error posting tweet \(error)")
