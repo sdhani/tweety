@@ -1,4 +1,4 @@
-# Project 3 - *Tweety*
+# *Tweety*
 **Tweety** is a basic basic twitter app to view, compose, favorite, and retweet tweets.
 
 ## User Stories
